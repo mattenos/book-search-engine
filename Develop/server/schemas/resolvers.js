@@ -4,16 +4,6 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        users: async () => {
-            return User.find().populate('books');
-        },
-        user: async (parent, { username }) => {
-            return User.findOne({ username }).populate('books');
-        },
-        books: async (parent, { username }) => {
-            const params = username ? { username } : {};
-            return Book.find(params).sort({ createdAt: -1 });
-        },
         me: async (parent, args, context) => {
             if (context.user) {
                 return User.findOne({ _id: context.user._id }).populate('books');
@@ -45,10 +35,10 @@ const resolvers = {
 
             return { token, user };
         },
-        addBook: async (parent, { bookTitle }, context) => {
+        saveBook: async (parent, { bookTitle }, context) => {
             if (context.user) {
                 const book = await Book.create({
-                    book,
+                    bookTitle,
                     userId: context.user.username,
                 });
 
@@ -64,7 +54,7 @@ const resolvers = {
         removeBook: async (parent, { bookTitle }, context) => {
             if (context.user) {
                 const book = await Book.findOneAndDelete({
-                    _id: bookId,
+                    bookTitle,
                     userId: context.user.username,
                 });
 
