@@ -35,10 +35,10 @@ const resolvers = {
 
             return { token, user };
         },
-        saveBook: async (parent, { bookTitle }, context) => {
+        saveBook: async (parent, { title }, context) => {
             if (context.user) {
                 const book = await Book.create({
-                    bookTitle,
+                    title,
                     userId: context.user.username,
                 });
 
@@ -51,10 +51,10 @@ const resolvers = {
             }
             throw new AuthenticationError('You need to be logged in!');
         },
-        removeBook: async (parent, { bookTitle }, context) => {
+        removeBook: async (parent, { title }, context) => {
             if (context.user) {
                 const book = await Book.findOneAndDelete({
-                    bookTitle,
+                    title,
                     userId: context.user.username,
                 });
 
